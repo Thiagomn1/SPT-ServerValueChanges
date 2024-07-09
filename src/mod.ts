@@ -36,7 +36,6 @@ class Mod implements IPostSptLoadMod
             }
         });
 
-        // log the 'myProperty' value to the console
         logger.logWithColor("FIR Quest Requirements Removed", LogTextColor.CYAN);
     }
 }
