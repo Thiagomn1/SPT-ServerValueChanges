@@ -1,0 +1,5 @@
+{
+    "removeFIRRequirements": false,
+    "enableFlea": true,
+    "minFleaLevel": 1
+}

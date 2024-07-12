@@ -8,6 +8,8 @@ import { LogTextColor } from "@spt/models/spt/logging/LogTextColor";
 
 class Mod implements IPostSptLoadMod 
 {
+    private modConfig = require("./config/config.json");
+
     public postSptLoad(container: DependencyContainer): void 
     {
         const logger = container.resolve<ILogger>("WinstonLogger");
@@ -15,28 +17,40 @@ class Mod implements IPostSptLoadMod
         const tables = databaseServer.getTables();
         const quests = tables.templates.quests as unknown as Record<string, IQuest>;
 
-        Object.keys(quests).forEach((questId) => 
+        if (this.modConfig.enableFlea) 
         {
-            const currentQuest = quests[questId];
+            const globals = tables.globals.config;
 
-            if (currentQuest?.conditions?.AvailableForFinish.length) 
+            globals.RagFair.minUserLevel = this.modConfig.minFleaLevel;
+
+            logger.logWithColor(`Flea Market Level changed to ${this.modConfig.minFleaLevel}`, LogTextColor.CYAN);
+        }
+
+        if (this.modConfig.removeFIRRequirements) 
+        {
+            Object.keys(quests).forEach((questId) => 
             {
-                currentQuest.conditions.AvailableForFinish.forEach((condition) => 
+                const currentQuest = quests[questId];
+
+                if (currentQuest?.conditions?.AvailableForFinish.length) 
                 {
-                    if (condition.conditionType === "FindItem") 
+                    currentQuest.conditions.AvailableForFinish.forEach((condition) => 
                     {
-                        condition.onlyFoundInRaid = false;
-                    }
+                        if (condition.conditionType === "FindItem") 
+                        {
+                            condition.onlyFoundInRaid = false;
+                        }
 
-                    if (condition.conditionType === "HandoverItem") 
-                    {
-                        condition.onlyFoundInRaid = false;
-                    }
-                });
-            }
-        });
+                        if (condition.conditionType === "HandoverItem") 
+                        {
+                            condition.onlyFoundInRaid = false;
+                        }
+                    });
+                }
+            });
 
-        logger.logWithColor("FIR Quest Requirements Removed", LogTextColor.CYAN);
+            logger.logWithColor("FIR Quest Requirements Removed", LogTextColor.CYAN);
+        }
     }
 }
 
