@@ -51,6 +51,27 @@ class Mod implements IPostSptLoadMod
 
             logger.logWithColor("FIR Quest Requirements Removed", LogTextColor.CYAN);
         }
+
+        if (this.modConfig.removeFIRHideout) 
+        {
+            for (const hideoutAreaData of Object.values(tables.hideout.areas)) 
+            {
+                for (const stage of Object.values(hideoutAreaData.stages)) 
+                {
+                    const requirements = stage.requirements;
+                    if (requirements && requirements.length > 0) 
+                    {
+                        for (const requirement of requirements) 
+                        {
+                            if (Object.prototype.hasOwnProperty.call(requirement, "isSpawnedInSession"))
+                            {
+                                requirement.isSpawnedInSession = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

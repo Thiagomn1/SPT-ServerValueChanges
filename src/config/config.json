@@ -1,5 +1,6 @@
 {
-    "removeFIRRequirements": false,
-    "enableFlea": true,
-    "minFleaLevel": 1
+  "removeFIRRequirements": false,
+  "removeFIRHideout": true,
+  "enableFlea": true,
+  "minFleaLevel": 1
 }
